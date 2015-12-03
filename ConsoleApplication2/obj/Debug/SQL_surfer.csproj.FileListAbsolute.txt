@@ -1,0 +1,14 @@
+c:\users\jastaylor\documents\visual studio 2013\Projects\ConsoleApplication2\ConsoleApplication2\bin\Debug\ConsoleApplication2.exe.config
+c:\users\jastaylor\documents\visual studio 2013\Projects\ConsoleApplication2\ConsoleApplication2\bin\Debug\ConsoleApplication2.exe
+c:\users\jastaylor\documents\visual studio 2013\Projects\ConsoleApplication2\ConsoleApplication2\bin\Debug\ConsoleApplication2.pdb
+c:\users\jastaylor\documents\visual studio 2013\Projects\ConsoleApplication2\ConsoleApplication2\obj\Debug\SQL_surfer.csprojResolveAssemblyReference.cache
+c:\users\jastaylor\documents\visual studio 2013\Projects\ConsoleApplication2\ConsoleApplication2\obj\Debug\ConsoleApplication2.exe
+c:\users\jastaylor\documents\visual studio 2013\Projects\ConsoleApplication2\ConsoleApplication2\obj\Debug\ConsoleApplication2.pdb
+c:\users\jastaylor\documents\visual studio 2013\Projects\ConsoleApplication2\ConsoleApplication2\bin\Debug\EntityFramework.dll
+c:\users\jastaylor\documents\visual studio 2013\Projects\ConsoleApplication2\ConsoleApplication2\bin\Debug\EntityFramework.SqlServer.dll
+c:\users\jastaylor\documents\visual studio 2013\Projects\ConsoleApplication2\ConsoleApplication2\bin\Debug\MySql.Data.dll
+c:\users\jastaylor\documents\visual studio 2013\Projects\ConsoleApplication2\ConsoleApplication2\bin\Debug\mysql.data.entity.EF6.dll
+c:\users\jastaylor\documents\visual studio 2013\Projects\ConsoleApplication2\ConsoleApplication2\bin\Debug\MySql.Fabric.Plugin.dll
+c:\users\jastaylor\documents\visual studio 2013\Projects\ConsoleApplication2\ConsoleApplication2\bin\Debug\MySql.Web.dll
+c:\users\jastaylor\documents\visual studio 2013\Projects\ConsoleApplication2\ConsoleApplication2\bin\Debug\EntityFramework.xml
+c:\users\jastaylor\documents\visual studio 2013\Projects\ConsoleApplication2\ConsoleApplication2\bin\Debug\EntityFramework.SqlServer.xml

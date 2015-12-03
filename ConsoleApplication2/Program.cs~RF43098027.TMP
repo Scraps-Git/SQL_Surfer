@@ -1,0 +1,162 @@
+﻿using System;
+using System.Net;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Data.SqlClient;
+using System.Data;
+using System.Data.Sql;
+using MySql.Data.MySqlClient;
+
+
+
+namespace SQL_surfer
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+           // Program prog = new Program();
+            //prog.ScrubAzureRd();
+
+            Program prog = new Program();
+            prog.QueryAzOld();
+            
+        }//end main
+//
+        public void QueryAzOld(){// Query azure for old urls and ping for live links 
+
+            var ping = new System.Net.NetworkInformation.Ping();
+
+            DB azure = new DB();
+            SqlConnection cnn = azure.GetAzure();
+            SqlDataReader azdata;
+            SqlCommand azcom = new SqlCommand();
+
+
+            string az_hm_ifp_redirup_q = "select distinct cb_community_home_design.interative_floor_plan,cb_community_home_design.title_,cb_community.salesCenterState from cb_community_home_design join cb_community on  cb_community.ownr= cb_community_home_design.ownr where DATALENGTH(interative_floor_plan) >0  AND (not((interative_floor_plan like '%[?]%')))";
+            azcom.CommandText = az_hm_ifp_redirup_q;
+            azcom.Connection = cnn;
+
+            azdata = azcom.ExecuteReader();
+            while (azdata.Read())
+            {
+                string data = azdata["interative_floor_plan"].ToString();
+                if (!data.Equals(""))
+                {
+                    try
+                    {
+                        HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(data);
+                        request.AllowAutoRedirect = false; // find out if this site is up and don't follow a redirector
+                        request.Method = "HEAD";
+                        var response = request.GetResponse();
+                        Console.WriteLine(response.Headers.ToString());
+                        // do something with response.Headers to find out information about the request
+                    }
+                    catch (WebException wex)
+                    {
+                        //set flag if there was a timeout or some other issues
+                    }
+                }
+                }
+               
+            
+            Console.ReadKey();
+    
+    
+    }
+//
+        public void ScrubAzureRd() { // scrob azure of old style url's updated from the feed
+            Console.WriteLine("Start ! ");
+            //string connetionString = null;
+            DB azure = new DB();
+            DB matrix = new DB();
+            SqlConnection cnn = azure.GetAzure();
+            MySqlConnection khov = matrix.GetMatrix();
+            SqlDataReader azdata;
+            MySqlDataReader mxdata;
+            string new_url = "null";
+            string old_url = "null";
+            List<string> NewUrl = new List<string>();
+            List<string> OldUrl = new List<string>();
+            int x = 0;
+            int y = 0;
+
+            // string sql_ver = "SELECT @@VERSION";
+            string mx_revised_url_q = "SELECT * FROM redirected_url_db";
+            //string az_boyl_ifp_q = "SELECT [interactive_floor_plan] FROM boyl_quick_move_in_home";
+            string az_boylqmi_ifp_update_q = "UPDATE boyl_quick_move_in_home  SET [interactive_floor_plan] = @new WHERE [interactive_floor_plan]= @old";
+            string az_boylhd_ifp_update_q = "UPDATE boyl_home_design  SET [interative_floor_plan] = @new WHERE [interative_floor_plan]= @old";
+
+            string az_cb_lqmi_ifp_update_q = "UPDATE cb_quick_move_in_home  SET [interactive_floor_plan] = @new WHERE [interactive_floor_plan]= @old";
+            string az_cb_comm_hd_ifp_update_q = "UPDATE cb_community_home_design SET [interative_floor_plan] = @new WHERE [interative_floor_plan]= @old";
+
+
+            try
+            {
+
+                // SqlCommand azcom = new SqlCommand(az_boyl_ifp_q, cnn);
+
+                SqlCommand azcom2 = new SqlCommand();//(az_boylqmi_ifp_update_q, cnn);
+                azcom2.Connection = cnn;
+                azcom2.Parameters.AddWithValue("@new", new_url);
+                azcom2.Parameters.AddWithValue("@old", old_url);
+
+                //azdata = azcom.ExecuteReader();
+
+                MySqlCommand mxcom = new MySqlCommand(mx_revised_url_q, khov);
+                mxdata = mxcom.ExecuteReader();
+                //azdata = azcom.ExecuteReader();
+
+                //Console.WriteLine();
+                int i = 0;
+                while (mxdata.Read())
+                {// while sill reading fro repacement values
+
+                    NewUrl.Add(mxdata["new_url"].ToString());// populate replacement list
+                    OldUrl.Add(mxdata["old_url"].ToString());
+
+                    new_url = NewUrl[i];// set repalcemet variable
+                    old_url = OldUrl[i];
+
+                    azcom2.Parameters["@old"].Value = old_url; // set repalcement parameter
+                    azcom2.Parameters["@new"].Value = new_url;
+
+
+                    azcom2.CommandText = az_boylqmi_ifp_update_q;
+                    azcom2.ExecuteNonQuery(); // Execute Query
+
+                    azcom2.CommandText = az_boylhd_ifp_update_q;
+                    azcom2.ExecuteNonQuery(); // Execute Query
+
+                    azcom2.CommandText = az_cb_comm_hd_ifp_update_q;
+                    azcom2.ExecuteNonQuery(); // Execute Query
+
+                    azcom2.CommandText = az_cb_lqmi_ifp_update_q;
+                    azcom2.ExecuteNonQuery(); // Execute Query
+
+
+                    //Console.WriteLine(old_url);
+
+                    i++;
+                }
+                azcom2.Dispose();
+                //azcom.Dispose();             
+                cnn.Close();
+                khov.Close();
+            }
+
+
+            catch (Exception ex)
+            {
+                Console.WriteLine("Un-handled Program Failure ! " + ex);
+            }
+            Console.WriteLine("Finished !");
+
+            Console.ReadKey();
+        
+        
+        }
+    }//end prog clas
+}// end nmaespace
